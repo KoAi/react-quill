@@ -18,7 +18,7 @@
   "types": "types.d.ts",
   "scripts": {
     "test": "make test",
-    "build": "make build",
+    "build": "npm install && make build",
     "prepack": "make build",
     "postpack": "make clean",
     "prepublish": "make build",
