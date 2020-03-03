@@ -41,7 +41,7 @@ var QuillComponent = createClass({
 			if (isNotObject) return isNotObject;
 
 			if (
-				props.modules && 
+				props.modules &&
 				props.modules.toolbar &&
 				props.modules.toolbar[0] &&
 				props.modules.toolbar[0].type
@@ -98,7 +98,7 @@ var QuillComponent = createClass({
 			}
 		}
 	},
-		
+
 	/*
 	Changing one of these props should cause a full re-render.
 	*/
@@ -128,11 +128,9 @@ var QuillComponent = createClass({
 		'onKeyUp',
 	],
 
-	getDefaultProps: function() {
-		return {
-			theme: 'snow',
-			modules: {},
-		};
+	defaultProps: {
+		theme: 'snow',
+		modules: {},
 	},
 
 	/*
@@ -159,7 +157,7 @@ var QuillComponent = createClass({
 		// still undefined. Must check if editor is undefined
 		// before performing this call.
 		if (!editor) return;
-		
+
 		// Update only if we've been passed a new `value`.
 		// This leaves components using `defaultValue` alone.
 		if ('value' in nextProps) {
@@ -177,13 +175,13 @@ var QuillComponent = createClass({
 			//       controlled and uncontrolled mode. We can't prevent
 			//       the change, but we'll still override content
 			//       whenever `value` differs from current state.
-			// NOTE: Comparing an HTML string and a Quill Delta will always trigger 
+			// NOTE: Comparing an HTML string and a Quill Delta will always trigger
 			//       a change, regardless of whether they represent the same document.
 			if (!this.isEqualValue(nextContents, currentContents)) {
 				this.setEditorContents(editor, nextContents);
 			}
 		}
-		
+
 		// We can update readOnly state in-place.
 		if ('readOnly' in nextProps) {
 			if (nextProps.readOnly !== this.props.readOnly) {
@@ -206,9 +204,13 @@ var QuillComponent = createClass({
 		// Restore editor from Quill's native formats in regeneration scenario
 		if (this.quillDelta) {
 			this.editor.setContents(this.quillDelta);
-			this.editor.setSelection(this.quillSelection);		
-			this.editor.focus();
-			this.quillDelta = this.quillSelection = null;
+			if (this.quillSelection) {
+				this.editor.setSelection(this.quillSelection);
+			}
+			if (this.quillHasFocus) {
+				this.editor.focus();
+			}
+			this.quillDelta = this.quillSelection = this.quillHasFocus = null;
 			return;
 		}
 		if (this.state.value) {
@@ -231,7 +233,7 @@ var QuillComponent = createClass({
 		if (this.state.generation !== nextState.generation) {
 			return true;
 		}
-		
+
 		// Compare props that require React updating the DOM.
 		return some(this.cleanProps, function(prop) {
 			// Note that `isEqual` compares deeply, making it safe to perform
@@ -273,7 +275,7 @@ var QuillComponent = createClass({
 			modules:      this.props.modules,
 			placeholder:  this.props.placeholder,
 			readOnly:     this.props.readOnly,
-      			scrollingContainer: this.props.scrollingContainer,
+			scrollingContainer: this.props.scrollingContainer,
 			tabIndex:     this.props.tabIndex,
 			theme:        this.props.theme,
 		};
@@ -321,6 +323,7 @@ var QuillComponent = createClass({
 		// Cache selection and contents in Quill's native format to be restored later
 		this.quillDelta = this.editor.getContents();
 		this.quillSelection = this.editor.getSelection();
+		this.quillHasFocus = this.editor.hasFocus();
 		this.setState({
 			generation: this.state.generation + 1,
 		});
@@ -353,13 +356,13 @@ var QuillComponent = createClass({
 
 	render: function() {
 		return DOM.div({
-			id: this.props.id,
-			style: this.props.style,
-			key: this.state.generation,
-			className: ['quill'].concat(this.props.className).join(' '),
-			onKeyPress: this.props.onKeyPress,
-			onKeyDown: this.props.onKeyDown,
-			onKeyUp: this.props.onKeyUp },
+				id: this.props.id,
+				style: this.props.style,
+				key: this.state.generation,
+				className: ['quill'].concat(this.props.className).join(' '),
+				onKeyPress: this.props.onKeyPress,
+				onKeyDown: this.props.onKeyDown,
+				onKeyUp: this.props.onKeyUp },
 			this.renderEditingArea()
 		);
 	},
@@ -372,7 +375,7 @@ var QuillComponent = createClass({
 		var nextContents = this.isDelta(currentContents)
 			? editor.getContents()
 			: editor.getHTML();
-		
+
 		if (!this.isEqualValue(nextContents, currentContents)) {
 			// Taint this `delta` object, so we can recognize whether the user
 			// is trying to send it back as `value`, preventing a likely loop.
@@ -394,9 +397,9 @@ var QuillComponent = createClass({
 		if (isEqual(nextSelection, currentSelection)) {
 			return;
 		}
-		
+
 		this.setState({ selection: nextSelection });
-		
+
 		if (this.props.onChangeSelection) {
 			this.props.onChangeSelection(nextSelection, source, editor);
 		}

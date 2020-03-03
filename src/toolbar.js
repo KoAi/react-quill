@@ -1,6 +1,6 @@
 /*
 QuillToolbar is deprecated. Consider switching to the official Quill
-toolbar format, or providing your own toolbar instead. 
+toolbar format, or providing your own toolbar instead.
 See https://quilljs.com/docs/modules/toolbar
 */
 
@@ -32,43 +32,43 @@ var defaultColors = [
 var defaultItems = [
 
 	{ label:'Formats', type:'group', items: [
-		{ label:'Font', type:'font', items: [
-			{ label:'Sans Serif',  value:'sans-serif', selected:true },
-			{ label:'Serif',       value:'serif' },
-			{ label:'Monospace',   value:'monospace' }
+			{ label:'Font', type:'font', items: [
+					{ label:'Sans Serif',  value:'sans-serif', selected:true },
+					{ label:'Serif',       value:'serif' },
+					{ label:'Monospace',   value:'monospace' }
+				]},
+			{ label:'Size', type:'size', items: [
+					{ label:'Small',  value:'10px' },
+					{ label:'Normal', value:'13px', selected:true },
+					{ label:'Large',  value:'18px' },
+					{ label:'Huge',   value:'32px' }
+				]},
+			{ label:'Alignment', type:'align', items: [
+					{ label:'', value:'', selected:true },
+					{ label:'', value:'center' },
+					{ label:'', value:'right' },
+					{ label:'', value:'justify' }
+				]}
 		]},
-		{ label:'Size', type:'size', items: [
-			{ label:'Small',  value:'10px' },
-			{ label:'Normal', value:'13px', selected:true },
-			{ label:'Large',  value:'18px' },
-			{ label:'Huge',   value:'32px' }
-		]},
-		{ label:'Alignment', type:'align', items: [
-			{ label:'', value:'', selected:true },
-			{ label:'', value:'center' },
-			{ label:'', value:'right' },
-			{ label:'', value:'justify' }
-		]}
-	]},
 
 	{ label:'Text', type:'group', items: [
-		{ type:'bold', label:'Bold' },
-		{ type:'italic', label:'Italic' },
-		{ type:'strike', label:'Strike' },
-		{ type:'underline', label:'Underline' },
-		{ type:'color', label:'Color', items:defaultColors },
-		{ type:'background', label:'Background color', items:defaultColors },
-		{ type:'link', label:'Link' }
-	]},
+			{ type:'bold', label:'Bold' },
+			{ type:'italic', label:'Italic' },
+			{ type:'strike', label:'Strike' },
+			{ type:'underline', label:'Underline' },
+			{ type:'color', label:'Color', items:defaultColors },
+			{ type:'background', label:'Background color', items:defaultColors },
+			{ type:'link', label:'Link' }
+		]},
 
 	{ label:'Blocks', type:'group', items: [
-		{ type:'list', value:'bullet' },
-		{ type:'list', value:'ordered' }
-	]},
+			{ type:'list', value:'bullet' },
+			{ type:'list', value:'ordered' }
+		]},
 
 	{ label:'Blocks', type:'group', items: [
-		{ type:'image', label:'Image' }
-	]}
+			{ type:'image', label:'Image' }
+		]}
 
 ];
 
@@ -83,10 +83,8 @@ var QuillToolbar = createClass({
 		items:     T.array
 	},
 
-	getDefaultProps: function() {
-		return {
-			items: defaultItems
-		};
+	defaultProps: {
+		items: defaultItems
 	},
 
 	componentDidMount: function() {
@@ -103,16 +101,16 @@ var QuillToolbar = createClass({
 
 	renderGroup: function(item, key) {
 		return DOM.span({
-			key: item.label || key,
-			className:'ql-formats' },
+				key: item.label || key,
+				className:'ql-formats' },
 			item.items.map(this.renderItem)
 		);
 	},
 
 	renderChoiceItem: function(item, key) {
 		return DOM.option({
-			key: item.label || item.value || key,
-			value: item.value },
+				key: item.label || item.value || key,
+				value: item.value },
 			item.label
 		);
 	},
@@ -131,20 +129,20 @@ var QuillToolbar = createClass({
 
 	renderButton: function(item, key) {
 		return DOM.button({
-			type: 'button',
-			key: item.label || item.value || key,
-			value: item.value,
-			className: 'ql-'+item.type,
-			title: item.label },
+				type: 'button',
+				key: item.label || item.value || key,
+				value: item.value,
+				className: 'ql-'+item.type,
+				title: item.label },
 			item.children
 		);
 	},
 
 	renderAction: function(item, key) {
 		return DOM.button({
-			key: item.label || item.value || key,
-			className: 'ql-'+item.type,
-			title: item.label },
+				key: item.label || item.value || key,
+				className: 'ql-'+item.type,
+				title: item.label },
 			item.children
 		);
 	},
