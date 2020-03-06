@@ -128,9 +128,11 @@ var QuillComponent = createClass({
 		'onKeyUp',
 	],
 
-	defaultProps: {
-		theme: 'snow',
-		modules: {},
+	getDefaultProps: function() {
+		return {
+			theme: 'snow',
+			modules: {},
+		};
 	},
 
 	/*
