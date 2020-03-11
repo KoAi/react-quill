@@ -19,7 +19,7 @@
   "scripts": {
     "test": "make test",
     "build": "make build",
-    "prepack": "npm install && make build",
+    "prepack": "npm install --unsafe-perm && make build",
     "postpack": "make clean",
     "prepublish": "make build",
     "postpublish": "make clean"
